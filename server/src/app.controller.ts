@@ -18,6 +18,7 @@ export class AppController {
   getProfile(@Request() req) {
     return req.user;
   }
-
+  @Get('test')
+  async test() {return JSON.stringify("This is a test request2")}
 }
 
