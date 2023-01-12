@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/user.entity';
+import { CreateUserDto } from 'src/users/users.dtos';
 
 @Injectable()
 export class AuthService {
-    constructor (private usersService:UsersService, private jwtService: JwtService) {}
+    constructor (private usersService:UsersService, private jwtService: JwtService, ) {}
 
     async validateUser (username:string, pass:string):Promise<any> {
-        const user = await this.usersService.findOne(username); 
-        if (user && user.password == pass) {
-            const {password, ...result} = user; 
+        console.log(username,pass);
+        const user = await this.usersService.findUsersByUserName(username);
+        console.log(user);
+        if (user && user.password === pass) {
+            const {password, ...result} = user;
             return result;
         }
         return null;
@@ -17,6 +21,15 @@ export class AuthService {
 
     async login (user:any) {
         const payload = {username:user.username, sub:user.userId}
-        return {access_token:this.jwtService.sign(payload)}
+        return {access_token:this.jwtService.sign(payload), user}
     }
+
+    async loginWithGoogle (createUserDto:CreateUserDto) {
+        const {email} = createUserDto;
+        const user = await this.usersService.findUsersByUserEmail(email);
+        if (user) {const payload = {username:user.username, sub:user.id}; return this.login(payload); }
+        const newUser =this.usersService.createUser(createUserDto);
+        this.login(newUser);
+        return newUser;
+      }
 }

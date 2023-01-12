@@ -58,6 +58,7 @@ interface InputParams {
   type:string;
   placeholder:string;
   name?:string;
+  height?:string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -90,12 +91,25 @@ const StyledInput = styled.input`
   }
 `;
 
-export const InputContainer = styled.div`
+interface InputContainerPattern {
+  height:string;
+}
+
+type InputContainerParams = {
+  height:string;
+  children: JSX.Element[];
+}
+
+export const InputContainer:React.FC<InputContainerParams> = ({height,children}) => {
+  return <InputContainerPattern height={height}>{children}</InputContainerPattern>
+}
+
+export const InputContainerPattern = styled.div<InputContainerPattern>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  height: 20%;
+  height: ${(props) => props.height};
   width: 100%;
 `;
 
