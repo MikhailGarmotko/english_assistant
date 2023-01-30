@@ -1,70 +1,76 @@
 import styled from 'styled-components';
-
+import React from 'react';
 
 export const MainContainer = styled.form`
-display: flex;
-align-items: center;
-flex-direction: column;
-height: 80vh;
-width: 30vw;
-background: rgba(255, 255, 255, 0.15);
-box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-backdrop-filter: blur(8.5px);
--webkit-backdrop-filter: blur(8.5px);
-border-radius: 10px;
-color: dark;
-text-transform: uppercase;
-letter-spacing: 0.4rem;
-@media only screen and (max-width: 320px) {
-  width: 80vw;
-  height: 90vh;
-  hr {
-    margin-bottom: 0.3rem;
-  }
-  h4 {
-    font-size: small;
-  }
-}
-@media only screen and (min-width: 360px) {
-  width: 80vw;
-  height: 90vh;
-  h4 {
-    font-size: small;
-  }
-}
-@media only screen and (min-width: 411px) {
-  width: 80vw;
-  height: 90vh;
-}
-@media only screen and (min-width: 768px) {
-  width: 80vw;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   height: 80vh;
-}
-@media only screen and (min-width: 1024px) {
-  width: 70vw;
-  height: 50vh;
-}
-@media only screen and (min-width: 1280px) {
   width: 30vw;
-  height: 80vh;
-}
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8.5px);
+  -webkit-backdrop-filter: blur(8.5px);
+  border-radius: 10px;
+  color: dark;
+  text-transform: uppercase;
+  letter-spacing: 0.4rem;
+  @media only screen and (max-width: 320px) {
+    width: 80vw;
+    height: 90vh;
+    hr {
+      margin-bottom: 0.3rem;
+    }
+    h4 {
+      font-size: small;
+    }
+  }
+  @media only screen and (min-width: 360px) {
+    width: 80vw;
+    height: 90vh;
+    h4 {
+      font-size: small;
+    }
+  }
+  @media only screen and (min-width: 411px) {
+    width: 80vw;
+    height: 90vh;
+  }
+  @media only screen and (min-width: 768px) {
+    width: 80vw;
+    height: 80vh;
+  }
+  @media only screen and (min-width: 1024px) {
+    width: 70vw;
+    height: 50vh;
+  }
+  @media only screen and (min-width: 1280px) {
+    width: 30vw;
+    height: 80vh;
+  }
 `;
 
 export const WelcomeText = styled.h2`
   margin: 3rem 0 2rem 0;
 `;
 
+export const InfoText = styled.h5`
+  margin: 3rem 0 2rem 0;
+`;
+
 interface InputParams {
-  type:string;
-  placeholder:string;
-  name?:string;
-  height?:string;
+  type: string;
+  placeholder: string;
+  name?: string;
+  height?: string;
+  /* eslint-disable */ 
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /* eslint-enable */
 }
 
-export const Input = ({type, placeholder, name, onChange}:InputParams) => {
-  return <StyledInput type = {type} placeholder={placeholder} name ={name} onChange = {onChange} />
-}
+export const Input = ({ type, placeholder, name, onChange }: InputParams) => {
+  return <StyledInput type={type} placeholder={placeholder} name={name} onChange={onChange} />;
+};
 
 const StyledInput = styled.input`
   background: rgba(255, 255, 255, 0.15);
@@ -91,20 +97,20 @@ const StyledInput = styled.input`
   }
 `;
 
-interface InputContainerPattern {
-  height:string;
+interface InputContainerPatternInterface {
+  height: string;
 }
 
 type InputContainerParams = {
-  height:string;
+  height: string;
   children: JSX.Element[];
-}
+};
 
-export const InputContainer:React.FC<InputContainerParams> = ({height,children}) => {
-  return <InputContainerPattern height={height}>{children}</InputContainerPattern>
-}
+export const InputContainer: React.FC<InputContainerParams> = ({ height, children }) => {
+  return <InputContainerPattern height={height}>{children}</InputContainerPattern>;
+};
 
-export const InputContainerPattern = styled.div<InputContainerPattern>`
+export const InputContainerPattern = styled.div<InputContainerPatternInterface>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -113,15 +119,16 @@ export const InputContainerPattern = styled.div<InputContainerPattern>`
   width: 100%;
 `;
 
-
 interface ButtonParams {
-  content:string;
+  content: string;
+  /* eslint-disable */ 
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  /* eslint-enable */
 }
 
-export const Button = ({ content, onClick}:ButtonParams) => {
+export const Button = ({ content, onClick }: ButtonParams) => {
   return <StyledButton onClick={onClick}>{content}</StyledButton>;
-}
+};
 
 const StyledButton = styled.button`
   background: linear-gradient(to right, #14163c 0%, #03217b 79%);
@@ -139,23 +146,25 @@ export const ButtonContainer = styled.div`
   margin: 1rem 0 2rem 0;
   width: 100%;
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
   align-items: center;
   justify-content: center;
 `;
 
 export const LoginWith = styled.h5`
-cursor: pointer;
+  cursor: pointer;
 `;
 
 export const HorizontalRule = styled.hr`
-width: 90%;
-height: 0.3rem;
-border-radius: 0.8rem;
-border: none;
-background: linear-gradient(to right, #14163c 0%, #03217b 79%);
-background-color: #ebd0d0;
-margin: 1.5rem 0 1rem 0;
-backdrop-filter: blur(25px);
+  width: 90%;
+  height: 0.3rem;
+  border-radius: 0.8rem;
+  border: none;
+  background: linear-gradient(to right, #14163c 0%, #03217b 79%);
+  background-color: #ebd0d0;
+  margin: 1.5rem 0 1rem 0;
+  backdrop-filter: blur(25px);
 `;
 
 export const IconsContainer = styled.div`
@@ -165,19 +174,18 @@ export const IconsContainer = styled.div`
   width: 80%;
 `;
 
-
 type IconParams = {
-  color:string;
-  children: JSX.Element,
+  color: string;
+  children: JSX.Element;
+};
+
+interface IconProps {
+  background: string;
 }
 
-interface IconProps {     
-  background:string;
-}
-
-export const Icon:React.FC<IconParams> =({ color, children}) => {
+export const Icon: React.FC<IconParams> = ({ color, children }) => {
   return <StyledIcon background={color}>{children}</StyledIcon>;
-}
+};
 
 const StyledIcon = styled.div<IconProps>`
   height: 3.5rem;

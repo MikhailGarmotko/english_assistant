@@ -12,12 +12,14 @@ export class UsersService {
       constructor (@InjectRepository(User) private readonly userRepository:Repository<User>) {}
     
       async createUser (createUserDto:CreateUserDto) {
-        const {email} = createUserDto;
-        const user = await this.userRepository.findOne({where:{email}})
-        // console.log(user)
-        if (user) {return JSON.stringify({message:"The email is existed"})}
+        const {email, username} = createUserDto;
+        const userEmail = await this.userRepository.findOne({where:{email}})
+        const userName = await this.userRepository.findOne({where:{username}})
+        if (userEmail) {return JSON.stringify({message:"Email is existed"})}
+        if (userName) {return JSON.stringify({message:"Username is existed"})}
         const newUser = this.userRepository.create(createUserDto);
-        return this.userRepository.save(newUser)}
+        this.userRepository.save(newUser)
+        return {message:"logged"}}
 
       async findUsersById (id:any) {return await this.userRepository.findOne({where:{id}})};
 
