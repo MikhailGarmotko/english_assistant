@@ -8,7 +8,7 @@ import {
 } from '../styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateUserMutation } from '../store/Auth.api';
+import { useCreateUserMutation } from '../store/slices/api/User.api';
 import { inputData } from '../store/types';
 import React from 'react';
 

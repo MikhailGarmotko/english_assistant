@@ -15,7 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import jwt_decode from 'jwt-decode';
 import React from 'react';
-import { useLoginMutation } from '../store/Auth.api';
+import { useLoginMutation, useLoginWithGoogleMutation } from '../store/slices/api/Auth.api';
+import { useAppDispatch } from '../store';
+import { setUser } from '../store/slices/userSlices';
 
 interface inputData {
   username: string;
@@ -31,21 +33,31 @@ type Decoded = {
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const [loginUser] = useLoginMutation();
+  const [loginWithGoogle] = useLoginWithGoogleMutation();
+  const dispatch = useAppDispatch();
   const [inputData, setInputData] = useState<inputData>({ username: '', password: '' });
+  const [inputValidation, setInputValidation] = useState(false);
+  const [noUser, setNoUser] = useState(false)
   const onChangeHandler = (e: any) => {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
   };
 
   const onSignInHandler = async (e: any) => {
     e.preventDefault();
+    setInputValidation(true);
+    if (!inputData.password.length || !inputData.username.length ) return;
     loginUser(inputData)
       .unwrap()
-      .then((access_token: any) => {
+      .then((payload: any) => {
+        const { access_token, ...user } = payload;
+        // debugger;
         if (access_token) {
           localStorage.setItem('access_token', access_token);
+          dispatch(setUser(user));
           navigate('/');
-        } else navigate('signup');
-      });
+        }
+      })
+      .catch((err) => (err ? setNoUser(true) : <></>));
   };
 
   return (
@@ -53,31 +65,34 @@ export const Login: React.FC = () => {
       <WelcomeText>Welcome</WelcomeText>
       <InputContainer height={'20%'}>
         <Input type="text" placeholder="User name" name="username" onChange={onChangeHandler} />
+        { inputValidation ?!inputData.username.length?<div style={{color:"red"}}>Please enter username</div>:<></>:<></>}
         <Input type="password" placeholder="Password" name="password" onChange={onChangeHandler} />
+        { inputValidation ?!inputData.password.length?<div style={{color:"red"}}>Please enter password</div>:<></>:<></>}
       </InputContainer>
       <ButtonContainer>
         <Button content="Sign In" onClick={onSignInHandler} />
+        <Button content="Sign Up" onClick={() =>navigate('signup') } />
       </ButtonContainer>
+      { noUser ?<div style={{color:"red"}}>No User, please sign up</div>:<></>}
       <LoginWith>OR LOGIN WITH</LoginWith>
       <HorizontalRule />
       <IconsContainer>
-        <GoogleOAuthProvider clientId="78282669505-d1podqbm237lt98p7t726q7ap8a2mer4.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
           <GoogleLogin
             onSuccess={async (credentialResponse: any) => {
               const decoded: Decoded = jwt_decode(credentialResponse.credential);
               const { name: username, email, jti: password } = decoded;
-              const response = await fetch('http://localhost:3000/auth/google', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, email, password })
-              });
-              const { access_token } = await response.json();
-              if (access_token) {
-                localStorage.setItem('access_token', access_token);
-                navigate('/');
-              }
+              loginWithGoogle({ username, email, password })
+                .unwrap()
+                .then((payload: any) => {
+                  const { access_token, ...user } = payload;
+                  if (access_token) {
+                    localStorage.setItem('access_token', access_token);
+                    dispatch(setUser(user));
+                    navigate('/');
+                  }
+                })
+                .catch((err) => console.log(err));
             }}
             onError={() => {
               console.log('Login Failed');

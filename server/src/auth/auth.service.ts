@@ -11,7 +11,7 @@ export class AuthService {
     async validateUser (username:string, pass:string):Promise<any> {
         console.log(username,pass);
         const user = await this.usersService.findUsersByUserName(username);
-        console.log(user);
+        // console.log(user);
         if (user && user.password === pass) {
             const {password, ...result} = user;
             return result;
@@ -20,14 +20,14 @@ export class AuthService {
     }
 
     async login (user:any) {
-        const payload = {username:user.username, email:user.email}
-        return {access_token:this.jwtService.sign(payload), user}
+        const payload = {username:user.username, email:user.email, id:user.id}
+        return {access_token:this.jwtService.sign(payload), payload}
     }
 
     async loginWithGoogle (createUserDto:CreateUserDto) {
         const {email} = createUserDto;
         const user = await this.usersService.findUsersByUserEmail(email);
-        if (user) {const payload = {username:user.username, sub:user.id}; return this.login(payload); }
+        if (user) {const payload = {username:user.username, email:user.email, id:user.id}; return this.login(payload); }
         const newUser =this.usersService.createUser(createUserDto);
         this.login(newUser);
         return newUser;

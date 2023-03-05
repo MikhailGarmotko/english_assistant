@@ -7,6 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { WordlistModule } from './wordlist/wordlist.module';
+import { Word } from './wordlist/words.entity';
 
 @Module({
   imports: [
@@ -24,11 +26,12 @@ import { join } from 'path';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User],
-        synchronize: true,
+        autoLoadEntities: true,
+        synchronize: false,
       }),
       inject:[ConfigService],
-    }), UsersModule, AuthModule],
+    }), 
+    UsersModule, AuthModule, WordlistModule],
   controllers: [],
   providers: [],
 })

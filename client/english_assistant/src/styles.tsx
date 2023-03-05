@@ -1,6 +1,43 @@
 import styled from 'styled-components';
 import React from 'react';
 
+export const MainContainerHome = styled.div`
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  flex-direction: column;
+  height:98vh;
+  width: 98vw;
+`;
+
+export const Profile = styled.div`
+border-radius:50%;
+color: white;
+display:flex;
+width:50px;
+height:60%;
+background-color:red;
+align-items:center;
+justify-content:center;
+`
+
+interface HomeInterface {
+  flex:string, 
+}
+interface HomeInterface {
+  flex:string, 
+  children:JSX.Element
+}
+export const HomeContainerComponent:React.FC<HomeInterface> = ({flex,children}) => {
+  return <HomeComponent flex={flex}  >{children}</HomeComponent>
+}
+const HomeComponent = styled.div<HomeInterface>`
+flex : ${ (props) => props.flex};
+width:100%;
+box-shadow: 0 4px 2px -2px gray;
+`;
+
 export const MainContainer = styled.form`
   display: flex;
   align-items: center;
